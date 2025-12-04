@@ -2,7 +2,7 @@
 CSCI 3110 Term Project
 
 
--
+
 Project Overview
 
 This application is a fake credit gambling website built as the final project for CSCI 3110. The goal was to design a complete web application with user accounts, database driven features, and interactive client side behavior. In this app, users can register, log in, manage their account information, and play two casino style games: Slots and Blackjack. Each game affects the user’s demo balance, and every bet is logged so the system always has a clear record of wins, losses, and wallet changes.
@@ -24,9 +24,8 @@ The app was built around a set of user stories describing how players and admins
 Future Improvements
 One improvement planned for later is implementing proper hashed/encrypted passwords instead of storing plain text, and learning the full hashing and verification process.
 
--
 
--
+
 Running the Application 
 
 
@@ -39,7 +38,7 @@ dotnet run
 After running these commands the application should create and seed the database. 
 After opening the application on localhost, the user can either create a new account through the register button or log into an existing account. 
 A professor account is already in the Dbseeder file, which is marked as an admin, to see non admin functionality create a new account. 
--
+
 
 Professor account log-in:
 - 
@@ -47,7 +46,7 @@ Email – drroach@gmail.com
 Password – professor
 -
 
--
+
 Ai Disclosure: 
 
 For this project, I used ChatGPT as an AI tool to help me learn and understand different parts of the assignment as I was building the application. AI wasn’t used to generate full solutions or write the project for me. Instead, it acted more like a fast reference tool that helped me figure out what I needed to understand so I could implement the correct solution myself.
