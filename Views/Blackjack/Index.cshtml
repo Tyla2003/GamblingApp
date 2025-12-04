@@ -1,0 +1,129 @@
+@{
+    ViewData["Title"] = "Blackjack";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Blackjack</h3>
+                <small class="text-light">
+                    Demo credits only – no real money.
+                </small>
+            </div>
+
+            <div class="card-body bg-dark text-white">
+                <div class="row">
+                    <!-- Player info + bet -->
+                    <div class="col-md-4 mb-4">
+                        <h5>Player</h5>
+                        <p class="mb-1">
+                            <strong>Name:</strong>
+                            <span id="bj-player-name">Loading...</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Email:</strong>
+                            <span id="bj-player-email">Loading...</span>
+                        </p>
+                        <p class="mb-3">
+                            <strong>Balance:</strong>
+                            $<span id="bj-player-balance">0.00</span>
+                        </p>
+
+                        <button id="bj-refresh-balance"
+                                class="btn btn-outline-light btn-sm mb-3">
+                            Refresh Balance
+                        </button>
+
+                        <div class="mb-3">
+                            <a href="/Account/Manage" class="btn btn-outline-info btn-sm">
+                                Account Overview
+                            </a>
+                        </div>
+
+                        <!-- Bet controls -->
+                        <div class="mt-2">
+                            <label class="form-label mb-1" for="bj-bet-input">
+                                Bet amount
+                            </label>
+                            <div class="input-group input-group-sm" style="max-width: 220px;">
+                                <span class="input-group-text">$</span>
+                                <input type="number"
+                                       id="bj-bet-input"
+                                       class="form-control"
+                                       min="1"
+                                       max="500"
+                                       step="1"
+                                       value="10" />
+                            </div>
+                            <small class="text-muted d-block mt-1" id="bj-bet-hint">
+                                Min $1 • Max $500 • Bet must be ≤ your balance.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Blackjack table -->
+                    <div class="col-md-8">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="bg-black p-3 rounded-3 mb-3"
+                                 style="border: 3px solid #0d6efd; max-width: 500px; width: 100%;">
+                                <!-- Dealer -->
+                                <div class="mb-3 text-center">
+                                    <h5 class="mb-1">Dealer</h5>
+                                    <div id="bj-dealer-hand" class="fs-4">
+                                        —
+                                    </div>
+                                    <div class="small text-muted">
+                                        Total: <span id="bj-dealer-total">0</span>
+                                    </div>
+                                </div>
+
+                                <hr class="border-secondary" />
+
+                                <!-- Player -->
+                                <div class="mt-3 text-center">
+                                    <h5 class="mb-1">You</h5>
+                                    <div id="bj-player-hand" class="fs-4">
+                                        Press "Deal Hand" to play.
+                                    </div>
+                                    <div class="small text-muted">
+                                        Total: <span id="bj-player-total">0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status / result -->
+                            <div class="mb-2 text-center">
+                                <div id="bj-outcome-text" class="fw-bold">
+                                    Set a bet and deal a hand.
+                                </div>
+                                <div id="bj-error-text"
+                                     class="text-danger small mt-1"
+                                     style="min-height: 1.2em;">
+                                </div>
+                            </div>
+
+                            <!-- Deal button -->
+                            <button id="bj-play-btn"
+                                    class="btn btn-primary btn-lg px-5">
+                                <span id="bj-play-label">Deal Hand for $10</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary mt-4" />
+
+                <small class="text-muted">
+                    Blackjack rules (simplified): Dealer draws to 17. Blackjack pays extra.
+                    Hands are auto-resolved for this project – no hit/stand choices.
+                    All hands and payouts are logged as bets and transactions.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/blackjack.js"></script>
+}

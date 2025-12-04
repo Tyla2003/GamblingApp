@@ -1,0 +1,104 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0 mt-5">
+            <div class="card-header bg-primary text-white text-center">
+                <h3 class="mb-0">Welcome Back</h3>
+                <small class="text-light">Sign in to your account</small>
+            </div>
+            <div class="card-body bg-dark">
+                <form id="login-form">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               name="email"
+                               placeholder="you@example.com"
+                               required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="password"
+                               placeholder="••••••••"
+                               required />
+                    </div>
+
+                    <div id="login-message" class="mb-2 text-danger small"></div>
+
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-success">
+                            Log In
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer bg-secondary text-center">
+                <small>
+                    Don't have an account?
+                    <a href="/Account/Register" class="text-white text-decoration-underline">
+                        Register here
+                    </a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("login-form");
+            const messageDiv = document.getElementById("login-message");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                messageDiv.textContent = "";
+
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+
+                const body = new URLSearchParams({
+                    Email: email,
+                    Password: password
+                });
+
+                try {
+                    const response = await fetch("/api/user/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: body.toString()
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            messageDiv.textContent = "Invalid email or password.";
+                        } else {
+                            messageDiv.textContent = "Login failed. Try again.";
+                        }
+                        return;
+                    }
+
+                    const data = await response.json();
+                    // Store user info in localStorage 
+                    localStorage.setItem("user", JSON.stringify(data));
+
+                    //Redirect to Dashboard
+                    window.location.href = "/Home/Index";
+                } catch (err) {
+                    console.error(err);
+                    messageDiv.textContent = "An error occurred while logging in.";
+                }
+            });
+        });
+    </script>
+}

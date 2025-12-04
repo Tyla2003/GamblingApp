@@ -1,0 +1,254 @@
+@{
+    ViewData["Title"] = "Admin - User Management";
+}
+
+<div class="row justify-content-center mt-4" id="admin-wrapper" style="display:none;">
+    <div class="col-lg-10">
+        <div class="card shadow border-0">
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Admin – User Management</h3>
+                <span class="small">Manage player accounts and view basic info.</span>
+            </div>
+            <div class="card-body bg-dark text-white">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                    <div>
+                        <strong>Logged in as:</strong>
+                        <span id="admin-name">Admin</span>
+                        (<span id="admin-email"></span>)
+                    </div>
+                    <div class="d-flex gap-2">
+                        <input type="text"
+                               id="user-search"
+                               class="form-control form-control-sm"
+                               placeholder="Search by email or name..." />
+                        <button id="refresh-users" class="btn btn-sm btn-outline-light">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="table-secondary text-dark">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col">Admin</th>
+                                <th scope="col">Created</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">
+                                    Loading users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mt-5" id="admin-denied" style="display:none;">
+    <div class="col-md-6">
+        <div class="alert alert-danger text-center">
+            <h4 class="alert-heading">Access Denied</h4>
+            <p class="mb-0">
+                This page is for admin accounts only.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: User Details + Admin Actions -->
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Basic details -->
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Id</dt>
+                    <dd class="col-sm-9" id="detail-id"></dd>
+
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9" id="detail-name"></dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9" id="detail-email"></dd>
+
+                    <dt class="col-sm-3">Balance</dt>
+                    <dd class="col-sm-9">$<span id="detail-balance"></span></dd>
+
+                    <dt class="col-sm-3">Admin</dt>
+                    <dd class="col-sm-9" id="detail-isadmin"></dd>
+
+                    <dt class="col-sm-3">Created At</dt>
+                    <dd class="col-sm-9" id="detail-created"></dd>
+                </dl>
+
+                <hr class="border-secondary" />
+
+                <!-- Admin actions feedback -->
+                <div id="admin-actions-message" class="mb-3 small"></div>
+
+                <!-- Admin actions -->
+                <div class="row g-3">
+                    <!-- Add $1000 -->
+                    <div class="col-md-4">
+                        <div class="card bg-secondary border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Balance Tools</h6>
+                                <p class="small mb-2">
+                                    Quickly credit this user with demo funds.
+                                </p>
+                                <button id="btn-admin-add-credits"
+                                        type="button"
+                                        class="btn btn-sm btn-success w-100">
+                                    Add $1000
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Email -->
+                    <div class="col-md-4">
+                        <div class="card bg-secondary border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Change Email</h6>
+                                <div class="mb-2">
+                                    <input type="email"
+                                           id="admin-new-email"
+                                           class="form-control form-control-sm"
+                                           placeholder="newemail@example.com" />
+                                </div>
+                                <button id="btn-admin-change-email"
+                                        type="button"
+                                        class="btn btn-sm btn-primary w-100">
+                                    Update Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Make / Remove Admin -->
+                    <div class="col-md-4">
+                        <div class="card bg-secondary border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">Admin Role</h6>
+                                <p class="small mb-2">
+                                    Toggle whether this user is an admin.
+                                </p>
+                                <button id="btn-toggle-admin"
+                                        type="button"
+                                        class="btn btn-sm btn-outline-warning w-100">
+                                    Make Admin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary mt-4" />
+
+                <small class="text-muted">
+                    Controls for editing users, adjusting balances, and promoting/demoting admins
+                    are restricted so admins cannot modify their own role or funds.
+                </small>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-outline-info me-auto"
+                        id="view-transactions-btn">
+                    View Transactions
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-light"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: User Transactions -->
+<div class="modal fade" id="userTransactionsModal" tabindex="-1"
+     aria-labelledby="userTransactionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="userTransactionsModalLabel">
+                    Transaction History – <span id="tx-user-name"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                    <div>
+                        <label class="form-label small mb-0">Sort by</label>
+                        <select id="tx-sort-field" class="form-select form-select-sm">
+                            <option value="createdAt">Date</option>
+                            <option value="amount">Amount</option>
+                            <option value="type">Type</option>
+                            <option value="betId">Bet Id</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label small mb-0">Direction</label>
+                        <select id="tx-sort-direction" class="form-select form-select-sm">
+                            <option value="desc">Newest / Highest first</option>
+                            <option value="asc">Oldest / Lowest first</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="table-secondary text-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Bet Id</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tx-table-body">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No transactions loaded.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-outline-light"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin-users.js"></script>
+}

@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "Slots";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Slots</h3>
+                <small class="text-light">
+                    Demo credits only – no real money.
+                </small>
+            </div>
+
+            <div class="card-body bg-dark text-white">
+                <div class="row">
+                    <!-- Player info -->
+                    <div class="col-md-4 mb-4">
+                        <h5>Player</h5>
+                        <p class="mb-1">
+                            <strong>Name:</strong>
+                            <span id="slots-player-name">Loading...</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Email:</strong>
+                            <span id="slots-player-email">Loading...</span>
+                        </p>
+                        <p class="mb-3">
+                            <strong>Balance:</strong>
+                            $<span id="slots-player-balance">0.00</span>
+                        </p>
+
+                        <button id="slots-refresh-balance"
+                                class="btn btn-outline-light btn-sm mb-3">
+                            Refresh Balance
+                        </button>
+
+                        <div class="mb-3">
+                            <a href="/Account/Manage" class="btn btn-outline-info btn-sm">
+                                Account Overview
+                            </a>
+                        </div>
+
+                        <!-- Bet controls -->
+                        <div class="mt-2">
+                            <label class="form-label mb-1" for="slots-bet-input">
+                                Bet per spin
+                            </label>
+                            <div class="input-group input-group-sm" style="max-width: 220px;">
+                                <span class="input-group-text">$</span>
+                                <input type="number"
+                                       id="slots-bet-input"
+                                       class="form-control"
+                                       min="1"
+                                       max="500"
+                                       step="1"
+                                       value="2" />
+                            </div>
+                            <small class="text-muted d-block mt-1" id="slots-bet-hint">
+                                Min $1 • Max $500 • Bet must be ≤ your balance.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Slot machine -->
+                    <div class="col-md-8">
+                        <div class="d-flex flex-column align-items-center">
+
+                            <!-- Reels -->
+                            <div class="bg-black p-3 rounded-3 mb-3"
+                                 style="border: 3px solid #28a745; max-width: 420px; width: 100%;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-center flex-fill">
+                                        <img id="reel-1-img"
+                                             src="/images/slots/lemon.png"
+                                             alt="Reel 1"
+                                             class="img-fluid"
+                                             style="max-height: 96px;">
+                                    </div>
+                                    <div class="text-center flex-fill">
+                                        <img id="reel-2-img"
+                                             src="/images/slots/cherry.png"
+                                             alt="Reel 2"
+                                             class="img-fluid"
+                                             style="max-height: 96px;">
+                                    </div>
+                                    <div class="text-center flex-fill">
+                                        <img id="reel-3-img"
+                                             src="/images/slots/diamond.png"
+                                             alt="Reel 3"
+                                             class="img-fluid"
+                                             style="max-height: 96px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status / result -->
+                            <div class="mb-2 text-center">
+                                <div id="slots-result-text" class="fw-bold">
+                                    Choose a bet and press Spin.
+                                </div>
+                                <div id="slots-error-text"
+                                     class="text-danger small mt-1"
+                                     style="min-height: 1.2em;">
+                                </div>
+                            </div>
+
+                            <!-- Spin button -->
+                            <button id="slots-spin-btn"
+                                    class="btn btn-success btn-lg px-5">
+                                <span id="slots-spin-label">Spin for $2</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary mt-4" />
+
+                <small class="text-muted">
+                    Payouts depend on symbol matches. Winnings are added to your demo balance and
+                    all spins are logged as transactions.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/slots.js"></script>
+}

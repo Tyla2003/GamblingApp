@@ -1,0 +1,367 @@
+@{
+    ViewData["Title"] = "Account Management";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Account Overview</h3>
+            </div>
+            <div class="card-body bg-dark text-white">
+                <p class="fs-5 mb-2">
+                    <strong>Name:</strong>
+                    <span id="user-name">Loading...</span>
+                </p>
+
+                <p class="fs-5 mb-2 d-flex justify-content-between align-items-center flex-wrap">
+                    <span>
+                        <strong>Email:</strong>
+                        <span id="user-email">Loading...</span>
+                    </span>
+                    <button id="change-email-btn"
+                            type="button"
+                            class="btn btn-sm btn-outline-info mt-2 mt-sm-0">
+                        Change Email
+                    </button>
+                </p>
+
+                <p class="fs-5 mb-3">
+                    <strong>Balance:</strong>
+                    $<span id="user-balance">0.00</span>
+                </p>
+
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button id="refresh-balance-btn" class="btn btn-outline-light flex-fill">
+                        Refresh Balance
+                    </button>
+
+                    <button id="add-funds-btn"
+                            type="button"
+                            class="btn btn-outline-success flex-fill"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addFundsModal">
+                        Add Funds
+                    </button>
+
+                    <button id="change-password-btn"
+                            type="button"
+                            class="btn btn-outline-warning flex-fill"
+                            data-bs-toggle="modal"
+                            data-bs-target="#changePasswordModal">
+                        Change Password
+                    </button>
+                </div>
+
+                <div class="d-flex mt-3 gap-2">
+                    <button id="payment-methods-btn"
+                            class="btn btn-success flex-fill"
+                            data-bs-toggle="modal"
+                            data-bs-target="#paymentMethodsModal">
+                        View / Add Payment Methods
+                    </button>
+                
+                </div>
+
+                <div class="d-flex mt-3" id="admin-panel-link" style="display:none;">
+                    <a class="btn btn-danger w-100" href="/Admin">
+                        Admin Dashboard
+                    </a>
+                </div>
+
+                <hr class="border-secondary mt-4" />
+
+                <small class="text-muted">
+                    Manage your account details, update security information, and maintain your payment methods.
+                    Payment methods are for now your balance is demo-only.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: View / Manage Payment Methods -->
+<div class="modal fade" id="paymentMethodsModal" tabindex="-1" aria-labelledby="paymentMethodsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="paymentMethodsModalLabel">Payment Methods</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Payment methods list -->
+                <div id="payment-methods-container" class="mb-3">
+                    <p class="text-muted mb-0">Loading payment methods...</p>
+                </div>
+
+                <!-- Add Payment Method button -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-sm btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addPaymentMethodModal">
+                        Add New Payment Method
+                    </button>
+                </div>
+
+                <!-- Collapsible Guide Toggle -->
+                <button class="btn btn-sm btn-outline-light mb-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#paymentGuideCollapse"
+                        aria-expanded="false"
+                        aria-controls="paymentGuideCollapse">
+                    Payment Method Guide ▾
+                </button>
+
+                <!-- Collapsible Guide Content -->
+                <div class="collapse" id="paymentGuideCollapse">
+                    <div class="card bg-secondary text-white mt-2">
+                        <div class="card-body">
+                            <ul class="mb-0">
+                                <li>Enter the <strong>full card number</strong> with no spaces or dashes (example: 4111111111111111).</li>
+                                <li>Make sure the <strong>expiration month and year</strong> match what’s on the card (ex. 05 / 2028).</li>
+                                <li>Use a <strong>nickname</strong> like "Personal Visa" or "Work Card" to recognize cards easily.</li>
+                                <li>Expired cards will not be usable when adding funds, keep expiration dates accurate.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <small class="text-muted me-auto">
+                    We only show the last 4 digits of your card here. The full number is never displayed.
+                </small>
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Payment Method -->
+<div class="modal fade" id="addPaymentMethodModal" tabindex="-1" aria-labelledby="addPaymentMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title" id="addPaymentMethodModalLabel">Add Payment Method</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-payment-method-form">
+                    <div class="mb-3">
+                        <label for="cardholderName" class="form-label">Name on Card</label>
+                        <input type="text"
+                               class="form-control"
+                               id="cardholderName"
+                               name="cardholderName"
+                               required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cardNumber" class="form-label">Card Number</label>
+                        <input type="text"
+                               class="form-control"
+                               id="cardNumber"
+                               name="cardNumber"
+                               maxlength="19"
+                               placeholder="4111111111111111"
+                               required />
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label for="expMonth" class="form-label">Exp Month</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="expMonth"
+                                   name="expMonth"
+                                   min="1" max="12"
+                                   required />
+                        </div>
+                        <div class="col-4">
+                            <label for="expYear" class="form-label">Exp Year</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="expYear"
+                                   name="expYear"
+                                   min="2025"
+                                   required />
+                        </div>
+                        <div class="col-4">
+                            <label for="cvv" class="form-label">CVV</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="cvv"
+                                   name="cvv"
+                                   minlength="3"
+                                   maxlength="4"
+                                   required />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nickname" class="form-label">Nickname (optional)</label>
+                        <input type="text"
+                               class="form-control"
+                               id="nickname"
+                               name="nickname"
+                               placeholder="Personal Visa" />
+                    </div>
+
+                    <div id="add-payment-method-message" class="small mb-2"></div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        Save Payment Method
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Funds -->
+<div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="addFundsModalLabel">Add Funds</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-funds-form">
+                    <div class="mb-3">
+                        <label for="deposit-payment-method" class="form-label">Payment Method</label>
+                        <select id="deposit-payment-method"
+                                class="form-select"
+                                required>
+                            <option disabled selected>Loading...</option>
+                        </select>
+                        <div class="form-text text-muted">
+                            Only active, non-expired cards will appear here.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="deposit-amount" class="form-label">Amount</label>
+                        <input type="number"
+                               class="form-control"
+                               id="deposit-amount"
+                               name="depositAmount"
+                               min="1"
+                               step="1"
+                               required />
+                        <div class="form-text text-muted">
+                            Demo credits only – no real money is charged.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="deposit-description" class="form-label">Description (optional)</label>
+                        <input type="text"
+                               class="form-control"
+                               id="deposit-description"
+                               name="depositDescription"
+                               maxlength="200"
+                               placeholder="e.g., Top-up from Visa ending in 1234" />
+                    </div>
+
+                    <div id="add-funds-message" class="small mb-2"></div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        Add Funds
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Change Email -->
+<div class="modal fade" id="changeEmailModal" tabindex="-1" aria-labelledby="changeEmailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="changeEmailModalLabel">Change Email</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="change-email-form">
+                    <div class="mb-3">
+                        <label for="newEmail" class="form-label">New Email</label>
+                        <input type="email"
+                               class="form-control"
+                               id="newEmail"
+                               name="newEmail"
+                               placeholder="newemail@example.com"
+                               required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="currentPasswordForEmail" class="form-label">Current Password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="currentPasswordForEmail"
+                               name="currentPasswordForEmail"
+                               required />
+                    </div>
+                    <div id="update-email-message" class="small mb-2"></div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Update Email
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Change Password -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header bg-secondary">
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="change-password-form">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="currentPassword"
+                               name="currentPassword"
+                               required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input type="password"
+                               class="form-control"
+                               id="newPassword"
+                               name="newPassword"
+                               required />
+                    </div>
+                    <div id="update-password-message" class="small mb-2"></div>
+
+                    <button type="submit" class="btn btn-warning w-100">
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/account-manage.js"></script>
+}

@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow border-0">
+            <!-- Header / Nav -->
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                <div>
+                    <h3 class="mb-0">Casino Lobby</h3>
+                    <small id="welcome-text" class="text-light">
+                        Loading player info...
+                    </small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="/Account/Manage" class="btn btn-outline-light btn-sm">
+                        Account
+                    </a>
+                    <button id="logout-btn" class="btn btn-danger btn-sm">
+                        Log Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body bg-dark text-white">
+                <div class="mb-3">
+                    <span class="me-3">
+                        <strong>Balance:</strong>
+                        $<span id="lobby-balance">0.00</span>
+                    </span>
+                    <span class="badge bg-info" id="lobby-email">
+                        <!-- fill from JS -->
+                    </span>
+                </div>
+
+                <hr class="border-secondary" />
+
+                <h4 class="mb-3 text-center">Games</h4>
+
+                <!-- Games container -->
+                <div id="games-container" class="row g-3">
+                    <!-- Slots tile -->
+                    <div class="col-md-6">
+                        <div class="card bg-black text-white h-100 border border-secondary">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Slots</h5>
+                                <!-- Favorite star -->
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-warning favorite-game-btn"
+                                        data-game-id="1">
+                                    <span class="favorite-star">☆</span>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p class="small mb-2">
+                                    Classic 3-reel demo slot machine with random payouts.
+                                </p>
+                                <p class="small text-muted mb-3">
+                                    Min bet: $1 • Max bet: $500
+                                </p>
+                                <a href="/Slots" class="btn btn-success w-100">
+                                    Play Slots
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blackjack tile -->
+                    <div class="col-md-6">
+                        <div class="card bg-black text-white h-100 border border-secondary">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Blackjack</h5>
+                                <!-- Favorite star -->
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-warning favorite-game-btn"
+                                        data-game-id="2">
+                                    <span class="favorite-star">☆</span>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <p class="small mb-2">
+                                    Play a simple hand of blackjack against the dealer.
+                                </p>
+                                <p class="small text-muted mb-3">
+                                    Min bet: $5 • Max bet: $500
+                                </p>
+                                <a href="/Blackjack" class="btn btn-primary w-100">
+                                    Play Blackjack
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- /games-container -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/home-index.js"></script>
+}
